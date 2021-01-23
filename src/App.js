@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import BlogForm from './components/BlogForm'
 import BlogsView from './components/BlogsView'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
@@ -6,6 +7,10 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [title, setTitle] = useState([])
+  const [author, setAuthor] = useState([])
+  const [url, setUrl] = useState([])
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -18,13 +23,28 @@ const App = () => {
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
-    
+
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON)
       setUser(user)
-      // blogService.setToken(user.token)
+      blogService.setToken(user.token)
     }
   }, [])
+
+  const addBlog = async (event) => {
+    event.preventDefault()
+    const blogObject = { title: title, author: author, url: url }
+
+    try {
+      const returnedBlog = await blogService.create(blogObject)
+      setBlogs(blogs.concat(returnedBlog))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+    } catch (exception) {
+      console.log(exception.error)
+    }
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -33,6 +53,7 @@ const App = () => {
       const user = await loginService.login({ username, password })
 
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -55,6 +76,16 @@ const App = () => {
             {user.name} logged in 
             <button onClick={handleLogout}>logout</button>
           </p>
+          <h2>Create new</h2>
+          <BlogForm 
+            title={title}
+            handleTitleChange={({ target }) => setTitle(target.value)}
+            author={author}
+            handleAuthorChange={({ target }) => setAuthor(target.value)}
+            url={url}
+            handleUrlChange={({ target }) => setUrl(target.value)}
+            submit={addBlog}
+          />
           <BlogsView blogs={blogs} />
         </div>
       )
