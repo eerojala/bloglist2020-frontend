@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import BlogForm from './components/BlogForm'
 import BlogsView from './components/BlogsView'
 import LoginForm from './components/LoginForm'
@@ -25,6 +25,11 @@ const App = () => {
   const [notification, setNotification] = useState(null)
   const [notificationStyle, setNotificationStyle] = useState(baseStyle)
 
+  // create a ref which we can use as a reference to a child component to access it's functions 
+  // (this is later passed to Toggable below)
+  // This hook ensures that the same reference (ref) is kepth throughout re-renders of this component
+  const blogFormRef = useRef() 
+
   // second parameter's empty array means that this hook is run only after the first render is done (not on subsequent renders)
   // so first the component is rendered without the blogs
   // but after the blogs are successfully fetched and the state is updated, the component is rerendered 
@@ -49,6 +54,7 @@ const App = () => {
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
       displaySuccessNotification('Successfully added a new blog!')
+      blogFormRef.current.toggleVisibility()
     } catch (exception) {
       displayErrorNotification(exception)
     }
@@ -98,7 +104,7 @@ const App = () => {
             {user.name} logged in 
             <button onClick={handleLogout}>logout</button>
           </p>
-          <Togglable buttonLabel='new blog'>
+          <Togglable buttonLabel='new blog' ref={blogFormRef}> 
             <h2>Create new</h2>
             <BlogForm handleSubmit={addBlog}/>
           </Togglable>
