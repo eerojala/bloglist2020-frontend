@@ -3,6 +3,7 @@ import BlogForm from './components/BlogForm'
 import BlogsView from './components/BlogsView'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -114,16 +115,18 @@ const App = () => {
             {user.name} logged in 
             <button onClick={handleLogout}>logout</button>
           </p>
-          <h2>Create new</h2>
-          <BlogForm 
-            title={title}
-            handleTitleChange={({ target }) => setTitle(target.value)}
-            author={author}
-            handleAuthorChange={({ target }) => setAuthor(target.value)}
-            url={url}
-            handleUrlChange={({ target }) => setUrl(target.value)}
-            submit={addBlog}
-          />
+          <Togglable buttonLabel='new blog'>
+            <h2>Create new</h2>
+            <BlogForm 
+              title={title}
+              handleTitleChange={({ target }) => setTitle(target.value)}
+              author={author}
+              handleAuthorChange={({ target }) => setAuthor(target.value)}
+              url={url}
+              handleUrlChange={({ target }) => setUrl(target.value)}
+              submit={addBlog}
+            />
+          </Togglable>
           <BlogsView blogs={blogs} />
         </div>
       )
@@ -132,16 +135,17 @@ const App = () => {
         <div>
           <h2>Log in to application</h2>
           <LoginForm 
-            username={username} 
-            handleUsernameChange={({ target }) => setUsername(target.value)} 
-            password={password} 
-            handlePasswordChange={({ target }) => setPassword(target.value)} 
-            handleLogin={handleLogin} 
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
           />
         </div>
       )
     }
   }
+
 
   return (
     <div>

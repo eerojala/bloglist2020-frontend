@@ -1,9 +1,9 @@
 import React from 'react'
 
-const LoginForm = ({ username, handleUsernameChange, password, handlePasswordChange, handleLogin }) => {
+const LoginForm = ({ username, handleUsernameChange, password, handlePasswordChange, handleSubmit }) => {
   return (
     <div>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleSubmit}>
         <div>
           username <input type="text" value={username} name="Username" onChange={handleUsernameChange} />
         </div>
