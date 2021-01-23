@@ -21,14 +21,7 @@ const App = () => {
   const errorStyle = {...baseStyle, color: "red"}
 
   const [blogs, setBlogs] = useState([])
-  const [title, setTitle] = useState([])
-  const [author, setAuthor] = useState([])
-  const [url, setUrl] = useState([])
-
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
   const [notification, setNotification] = useState(null)
   const [notificationStyle, setNotificationStyle] = useState(baseStyle)
 
@@ -51,16 +44,10 @@ const App = () => {
     }
   }, [])
 
-  const addBlog = async (event) => {
-    event.preventDefault()
-    const blogObject = { title: title, author: author, url: url }
-
+  const addBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
       displaySuccessNotification('Successfully added a new blog!')
     } catch (exception) {
       displayErrorNotification(exception)
@@ -83,17 +70,13 @@ const App = () => {
     setTimeout(() => { setNotification(null) }, time) // After {time} milliseconds, the notification is nullified (so it does not render anymore)
   }
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    
+  const handleLogin = async (credentials) => {
     try {
-      const user = await loginService.login({ username, password })
+      const user = await loginService.login(credentials)
 
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
       displaySuccessNotification(`Successfully logged in as ${user.username}`)
     } catch (exception) {
       displayErrorNotification(exception)
@@ -117,15 +100,7 @@ const App = () => {
           </p>
           <Togglable buttonLabel='new blog'>
             <h2>Create new</h2>
-            <BlogForm 
-              title={title}
-              handleTitleChange={({ target }) => setTitle(target.value)}
-              author={author}
-              handleAuthorChange={({ target }) => setAuthor(target.value)}
-              url={url}
-              handleUrlChange={({ target }) => setUrl(target.value)}
-              submit={addBlog}
-            />
+            <BlogForm handleSubmit={addBlog}/>
           </Togglable>
           <BlogsView blogs={blogs} />
         </div>
@@ -134,18 +109,11 @@ const App = () => {
       return (
         <div>
           <h2>Log in to application</h2>
-          <LoginForm 
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
+          <LoginForm handleSubmit={handleLogin} />
         </div>
       )
     }
   }
-
 
   return (
     <div>
