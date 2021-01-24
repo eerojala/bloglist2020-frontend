@@ -62,13 +62,28 @@ const App = () => {
   }
 
   const updateBlog = async (blog) => {
+    console.log(blog)
     try {
       const updatedBlog = await blogService.update(blog)
 
       // replace the old blog with the updated blog without affecting the order of the blogs
       setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b)) 
     } catch (exception) {
-      displayErrorNotification(exception)
+      displayErrorNotification('Blog has been removed from the database after rendering this site. Removing blog...')
+      setBlogs(blogs.filter(b => b.id !== blog.id ))
+    }
+  }
+
+  const removeBlog = async (blog) => {
+    try {
+      if (window.confirm(`Are you sure you want to delete ${blog.title}?`)) {
+        await blogService.remove(blog.id)
+
+        setBlogs(blogs.filter(b => b.id !== blog.id ))
+      }
+    } catch (exception) {
+      displayErrorNotification('blog already removed from database')
+      setBlogs(blogs.filter(b => b.id !== blog.id ))
     }
   }
 
@@ -78,8 +93,8 @@ const App = () => {
     setNotificationTimeout(5000)
   }
 
-  const displayErrorNotification = (exception) => {
-    setNotification(exception.response.data.error)
+  const displayErrorNotification = (message) => {
+    setNotification(message)
     setNotificationStyle(errorStyle)
     setNotificationTimeout(8000)
   }
@@ -97,7 +112,7 @@ const App = () => {
       setUser(user)
       displaySuccessNotification(`Successfully logged in as ${user.username}`)
     } catch (exception) {
-      displayErrorNotification(exception)
+      displayErrorNotification(exception.response.data.error)
     } 
   }
 
@@ -124,7 +139,12 @@ const App = () => {
             <h2>Create new</h2>
             <BlogForm handleSubmit={addBlog}/>
           </Togglable>
-          <BlogsView blogs={sortedBlogs} handleLike={updateBlog}/>
+          <BlogsView 
+            blogs={sortedBlogs} 
+            user={user}
+            handleLike={updateBlog}
+            handleRemove={removeBlog}
+          />
         </div>
       )
     } else {
