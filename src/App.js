@@ -53,11 +53,13 @@ const App = () => {
     try {
       const returnedBlog = await blogService.create(blogObject)
 
+      returnedBlog.user = user // the returned blog is not populated with the user's data
       setBlogs(blogs.concat(returnedBlog))
       displaySuccessNotification('Successfully added a new blog!')
       blogFormRef.current.toggleVisibility()
     } catch (exception) {
-      displayErrorNotification(exception)
+      console.log('exception')
+      displayErrorNotification('Failed to add new blog')
     }
   }
 

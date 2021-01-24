@@ -34,7 +34,7 @@ const BlogView = ({ blog, handleLike, handleRemove, user }) => {
           {blog.likes}
           <button onClick={likeTheBlog}>Like</button>
         </p>
-        <p>{blog.author}</p>
+        <p>{blog.user.name}</p>
         <p>{removeButton()}</p>
       </div>
     )
@@ -53,7 +53,7 @@ const BlogView = ({ blog, handleLike, handleRemove, user }) => {
   return (
     <div style={blogStyle}>
       <p>
-        {blog.title} 
+        {blog.title} {blog.author}
         <button onClick={() => setShowDetails(!showDetails)}>{showDetails ? 'hide' : 'show'}</button>
       </p>
       {details()}
