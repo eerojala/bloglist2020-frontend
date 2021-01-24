@@ -52,9 +52,21 @@ const App = () => {
   const addBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
+
       setBlogs(blogs.concat(returnedBlog))
       displaySuccessNotification('Successfully added a new blog!')
       blogFormRef.current.toggleVisibility()
+    } catch (exception) {
+      displayErrorNotification(exception)
+    }
+  }
+
+  const updateBlog = async (blog) => {
+    try {
+      const updatedBlog = await blogService.update(blog)
+
+      // replace the old blog with the updated blog without affecting the order of the blogs
+      setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b)) 
     } catch (exception) {
       displayErrorNotification(exception)
     }
@@ -95,6 +107,10 @@ const App = () => {
     window.localStorage.removeItem('loggedInUser')
   }
 
+  let sortedBlogs = blogs.concat() // first we copy the blogs because the sort is done in-place and we don't want to affect the original array
+  sortedBlogs.sort((a, b) => b.likes - a.likes) // then we sort the copy based on the number of likes
+
+
   const display = () => {
     if (user !== null) {
       return (
@@ -108,7 +124,7 @@ const App = () => {
             <h2>Create new</h2>
             <BlogForm handleSubmit={addBlog}/>
           </Togglable>
-          <BlogsView blogs={blogs} />
+          <BlogsView blogs={sortedBlogs} handleLike={updateBlog}/>
         </div>
       )
     } else {

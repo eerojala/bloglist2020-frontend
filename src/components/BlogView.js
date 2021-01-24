@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const BlogView = ({ blog }) => {
+const BlogView = ({ blog, handleLike }) => {
   // we do not use <Togglable> because we want the button placement remain fixed in the top row next to the title
   const [showDetails, setShowDetails] = useState(false) 
 
@@ -10,6 +10,11 @@ const BlogView = ({ blog }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
+  }
+
+  const likeTheBlog = (event) => {
+    event.preventDefault()
+    handleLike({...blog, likes: blog.likes + 1})
   }
 
   const details = () => {
@@ -22,7 +27,7 @@ const BlogView = ({ blog }) => {
         <p>{blog.url}</p>
         <p>
           {blog.likes}
-          <button>Like</button>
+          <button onClick={likeTheBlog}>Like</button>
         </p>
         <p>{blog.author}</p>
       </div>
