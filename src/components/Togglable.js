@@ -8,6 +8,9 @@ const Togglable = React.forwardRef((props, ref) => {
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
+  const showButtonLabel = props.showButtonLabel ? props.showButtonLabel : 'show'
+  const hideButtonLabel = props.hideButtonLabel ? props.hideButtonLabel : 'hide'
+
   const toggleVisibility = () => {
     setVisible(!visible)
   }
@@ -22,11 +25,11 @@ const Togglable = React.forwardRef((props, ref) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <button onClick={toggleVisibility}>{showButtonLabel}</button>
       </div>
       <div style={showWhenVisible}>
         {props.children}
-        <button onClick={toggleVisibility}>cancel</button>
+        <button onClick={toggleVisibility}>{hideButtonLabel}</button>
       </div>
     </div>
   )
