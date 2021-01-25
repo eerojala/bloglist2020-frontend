@@ -39,7 +39,7 @@ test('renders only title and author by default', () => {
 
 test('renders other details too after pressing the show button', () => {
   const component = render(
-    <BlogView blog={blog} user={{ id: 'id2' }}/>
+    <BlogView blog={blog} user={{ id: 'id2' }} />
   )
 
   const showButton = component.getByText('show')
@@ -52,4 +52,25 @@ test('renders other details too after pressing the show button', () => {
   expect(component.container).toHaveTextContent('Url of this blog')
   expect(component.container).toHaveTextContent('7')
   expect(component.container).toHaveTextContent('The user who added this blog')
+})
+
+test('handleLike is called twice when pressing the like button twice', () => {
+  const mockHandler = jest.fn()
+
+  const component = render(
+    <BlogView blog={blog} user={{ id: 'id2' }} handleLike={mockHandler}/>
+  )
+
+  const showButton = component.getByText('show') // first open the details
+  expect(showButton).toBeDefined()
+  
+  fireEvent.click(showButton)
+
+  const likeButton = component.getByText('Like')
+  expect(likeButton).toBeDefined()
+
+  fireEvent.click(likeButton)
+  fireEvent.click(likeButton)
+
+  expect(mockHandler.mock.calls).toHaveLength(2)
 })
