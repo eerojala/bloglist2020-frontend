@@ -62,7 +62,8 @@ describe('Blog', function() { // Mocha (used by Cypress) recommends to not use a
         const blog = {
           title: 'This blog was added by user eerojala',
           author: 'John Doe',
-          url: 'www.wikipedia.com'
+          url: 'www.wikipedia.com',
+          likes: 0
         }
 
         cy.createBlog(blog)
@@ -91,6 +92,27 @@ describe('Blog', function() { // Mocha (used by Cypress) recommends to not use a
         cy.visit('http://localhost:3000') // refresh the page since we have now logged in as another user
         cy.contains('show').click() // click to show the details of the first blog
         cy.get('#remove-button').should('not.exist') // the button should not exist for other users than the one who originally added the blog
+      }) 
+    })
+
+    describe('and the database contains several blogs', function () {
+      beforeEach(function() {
+        cy.createBlog({ title: 'blog1', author: 'author1', url: 'url1', likes: 0 })
+        cy.createBlog({ title: 'blog2', author: 'author2', url: 'url2', likes: 2 })
+        cy.createBlog({ title: 'blog3', author: 'author3', url: 'url3', likes: 1 })
+        cy.visit('http://localhost:3000')
+      })
+
+      it('the blogs are sorted in decending order based on their likes', function() {
+        // cy
+        //   .get('#blogs')
+        //   .children()
+        //   .contains()
+        //   .next()
+        //   .next()
+        cy.get('#blog').should('contain', 'blog2 author2')
+        cy.get('#blog').next().should('contain', 'blog3 author3')
+        cy.get('#blog').next().next().should('contain', 'blog1 author1')
       })
     })
   })

@@ -31,14 +31,15 @@ Cypress.Commands.add('login', function({ username, password }) {
   })
 })
 
-Cypress.Commands.add('createBlog', function({ title, author, url }) {
+Cypress.Commands.add('createBlog', function({ title, author, url, likes}) {
   cy.request({
     url: 'http://localhost:3001/api/blogs',
     method: 'POST',
     body: {
-      title: 'This blog was added by user eerojala',
-      author: 'John Doe',
-      url: 'www.wikipedia.com'
+      title: title,
+      author: author,
+      url: url,
+      likes: likes
     },
     headers: {
       'Authorization': `bearer ${JSON.parse(localStorage.getItem('loggedInUser')).token}`

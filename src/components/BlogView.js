@@ -51,7 +51,7 @@ const BlogView = ({ blog, handleLike, handleRemove, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div id="blog" style={blogStyle}>
       <p>
         {blog.title} {blog.author}
         <button onClick={() => setShowDetails(!showDetails)}>{showDetails ? 'hide' : 'show'}</button>

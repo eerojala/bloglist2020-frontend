@@ -3,7 +3,7 @@ import BlogView from './BlogView'
 
 const BlogsView = ({ blogs, handleLike, handleRemove, user }) => {
   return (
-    <div>
+    <div id="blogs">
       {blogs.map(blog =>
         <BlogView 
           key={blog.id} 
