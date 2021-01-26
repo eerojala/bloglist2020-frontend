@@ -31,8 +31,8 @@ const BlogView = ({ blog, handleLike, handleRemove, user }) => {
       <div>
         <p>{blog.url}</p>
         <p>
-          {blog.likes}
-          <button onClick={likeTheBlog}>Like</button>
+          <span id="likes">{blog.likes}</span>
+          <button id="like-button" onClick={likeTheBlog}>Like</button>
         </p>
         <p>{blog.user.name}</p>
         <p>{removeButton()}</p>
