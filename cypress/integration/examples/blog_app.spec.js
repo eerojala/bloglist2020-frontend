@@ -33,11 +33,12 @@ describe('Blog', function() { // Mocha (used by Cypress) recommends to not use a
     })
 
     it('fails with incorrect credentials', function() {
-      cy.get('#username').type(user1.username)
-      cy.get('#password').type(user2.password)
+      cy.get('#username').type(user1.username) // type user1's username
+      cy.get('#password').type(user2.password) // type user2's password
       cy.get('#login-button').click()
 
       cy.contains('Invalid username or password')
+      cy.get('#notification').should('have.css', 'color', 'rgb(255, 0, 0)') // the notification should be red (colors must be inputted as rgb values for cypress)
     })
   })
 
@@ -97,22 +98,23 @@ describe('Blog', function() { // Mocha (used by Cypress) recommends to not use a
 
     describe('and the database contains several blogs', function () {
       beforeEach(function() {
-        cy.createBlog({ title: 'blog1', author: 'author1', url: 'url1', likes: 0 })
+        cy.createBlog({ title: 'blog1', author: 'author1', url: 'url1', likes: 0 }) // command createBlog is defined in cypress/support/commands.js
         cy.createBlog({ title: 'blog2', author: 'author2', url: 'url2', likes: 2 })
         cy.createBlog({ title: 'blog3', author: 'author3', url: 'url3', likes: 1 })
         cy.visit('http://localhost:3000')
       })
 
       it('the blogs are sorted in decending order based on their likes', function() {
-        // cy
-        //   .get('#blogs')
-        //   .children()
-        //   .contains()
-        //   .next()
-        //   .next()
-        cy.get('#blog').should('contain', 'blog2 author2')
-        cy.get('#blog').next().should('contain', 'blog3 author3')
-        cy.get('#blog').next().next().should('contain', 'blog1 author1')
+        // this works too, but is more ugly:
+        // cy.get('#blog').should('contain', 'blog2 author2')
+        // cy.get('#blog').next().should('contain', 'blog3 author3')
+        // cy.get('#blog').next().next().should('contain', 'blog1 author1')
+
+        cy.get('.blog').then(blogs => { // NOTE: do not use ids for checking multiple elements (get(#id) always returns only one element), use classes instead
+          cy.wrap(blogs[0]).should('contain', 'blog2 author2') // blogs is a promise, we can get access to it's resolved value by giving it to function cy.wrap
+          cy.wrap(blogs[1]).should('contain', 'blog3 author3') // these are testing inside the individual blog-element, so they cannot see the text in other blog elements
+          cy.wrap(blogs[2]).should('contain', 'blog1 author1')
+        })
       })
     })
   })
