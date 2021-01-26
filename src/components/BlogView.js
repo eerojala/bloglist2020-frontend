@@ -46,7 +46,7 @@ const BlogView = ({ blog, handleLike, handleRemove, user }) => {
     }
 
     return (
-      <button onClick={removeTheBlog}>remove</button>
+      <button id="remove-button" onClick={removeTheBlog}>remove</button>
     )
   }
 
