@@ -48,7 +48,7 @@ You can also call hooks from custom hooks, but not from regular javascript funct
 ### One-liner boolean toggle
 No need for if-statements or conditional operators!
 ```
-setVisible(!visible) // if visible = true then !true = false, if visible = false then !false = true
+setVisible(!visible) // if visible == true then set as !true (false), if visible == false then set as !false (true)
 ```
 
 ### Replacing a single object in an array without reordering the array 
