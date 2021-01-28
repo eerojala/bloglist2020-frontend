@@ -1,6 +1,3 @@
-# bloglist2020-frontend
-front-end fo the bloglist web application created during fullstack open 2020
-
 # What I (re-)learned - part 5
 ### Saving the token to localStorage
 Remember to save the token to userStorage after the user has logged in. This way the token can be read when the user revisits the page and they don't need to relogin. Remember to also remove the token from the local storage after the user has logged out. 
